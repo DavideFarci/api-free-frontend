@@ -29,8 +29,12 @@ export default {
       });
 
       if (newPost) {
+        this.getPosts();
         this.postCreated = true;
       }
+    },
+    async getPosts() {
+      this.posts = (await axios.get("http://localhost:5174/posts")).data.data;
     },
     async getCategories() {
       const categories = (await axios.get(store.baseUrl + "categories")).data;
