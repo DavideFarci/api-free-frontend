@@ -1,6 +1,6 @@
 <script>
-import axios from "axios";
-import { store } from "../store";
+import axios from 'axios';
+import { store } from '../store';
 export default {
   data() {
     return {
@@ -8,9 +8,9 @@ export default {
       arrCategories: [],
       arrTags: [],
       selectedTags: [],
-      title: "",
-      image: "",
-      content: "",
+      title: '',
+      image: '',
+      content: '',
       published: null,
       selectedCategory: null,
       errPostCreate: false,
@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     async createPost() {
-      const newPost = await axios.post("http://localhost:5174/posts", {
+      const newPost = await axios.post('http://localhost:5174/posts', {
         title: this.title,
         image: this.image,
         content: this.content,
@@ -29,19 +29,22 @@ export default {
       });
 
       if (newPost) {
-        this.getPosts();
+        this.renderPost();
         this.postCreated = true;
+        this.title = '';
+        this.image = '';
+        this.content = '';
+        this.selectedCategory = null;
+        this.selectedTags = [];
+        this.published = null;
       }
     },
-    async getPosts() {
-      this.posts = (await axios.get("http://localhost:5174/posts")).data.data;
-    },
     async getCategories() {
-      const categories = (await axios.get(store.baseUrl + "categories")).data;
+      const categories = (await axios.get(store.baseUrl + 'categories')).data;
       this.arrCategories = categories;
     },
     async getTags() {
-      const tags = (await axios.get(store.baseUrl + "tags")).data;
+      const tags = (await axios.get(store.baseUrl + 'tags')).data;
       this.arrTags = tags;
     },
     toggleTag(id) {
@@ -56,6 +59,9 @@ export default {
     isSelected(id) {
       return this.selectedTags.includes(id);
     },
+    renderPost() {
+      this.$emit('renderingPosts');
+    },
   },
   created() {
     this.getCategories();
@@ -67,12 +73,12 @@ export default {
 <template>
   <form
     @submit.prevent="createPost"
-    class="flex flex-col mx-auto text-left px-8 py-4 max-w-2xl rounded-xl bg-green-200"
+    class="mx-auto flex max-w-2xl flex-col rounded-xl bg-green-200 px-8 py-4 text-left"
   >
     <h2 class="text-2xl font-bold">Nuovo Post</h2>
     <label class="font-semibold" for="title">Titolo</label>
     <input
-      class="border border-slate-300 rounded-md p-1"
+      class="rounded-md border border-slate-300 p-1"
       v-model="title"
       type="text"
       name="title"
@@ -80,7 +86,7 @@ export default {
 
     <label class="font-semibold" for="image">Immagine</label>
     <input
-      class="border border-slate-300 rounded-md p-1"
+      class="rounded-md border border-slate-300 p-1"
       v-model="image"
       type="text"
       name="image"
@@ -88,14 +94,14 @@ export default {
 
     <label class="font-semibold" for="content">Contenuto del post</label>
     <textarea
-      class="border border-slate-300 rounded-md p-1 mb-2"
+      class="mb-2 rounded-md border border-slate-300 p-1"
       v-model="content"
       name="content"
       cols="30"
       rows="10"
     ></textarea>
 
-    <select class="p-1 mb-2" v-model="selectedCategory" name="category">
+    <select class="mb-2 p-1" v-model="selectedCategory" name="category">
       <option value="null">Seleziona una categoria</option>
       <option
         v-for="category in arrCategories"
@@ -119,14 +125,14 @@ export default {
       </template>
     </div>
 
-    <select class="p-1 mb-3" v-model="published" name="public">
+    <select class="mb-3 p-1" v-model="published" name="public">
       <option value="null">Vuoi rendere il post pubblico?</option>
       <option :value="true">Pubblico</option>
       <option :value="false">Privato</option>
     </select>
 
     <button
-      class="self-center rounded-md text-white font-semibold px-4 py-2 bg-green-700"
+      class="self-center rounded-md bg-green-700 px-4 py-2 font-semibold text-white"
       type="submit"
     >
       Crea

@@ -7,10 +7,12 @@ export default {
 </script>
 
 <template>
-  <div class="card grid grid-cols-2 gap-4 border p-2">
+  <div
+    class="card grid grid-cols-2 gap-4 rounded-md border bg-green-700 p-3 font-mono text-white shadow-sm shadow-green-500"
+  >
     <div class="grid grid-cols-1">
       <h3 class="text-xl font-bold">{{ postData.title }}</h3>
-      <p>{{ postData.content }}</p>
+      <p class="text-sm">{{ postData.content }}</p>
       <div v-if="postData.category">
         <span class="font-semibold">Categoria:</span>
         {{ postData.category.name }}
